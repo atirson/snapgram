@@ -1,4 +1,4 @@
-import { Outlet, Navigate } from "react-router-dom"
+import { Outlet, Navigate } from 'react-router-dom'
 
 export const AuthLayout = () => {
   const isAuthenticated = false
@@ -13,12 +13,12 @@ export const AuthLayout = () => {
             <Outlet />
           </section>
           <img
-            src="/images/auth.svg"
-            alt="Auth illustration"
-            className="absolute bottom-0 right-0 w-2/4" />
+            src="/assets/images/side-img.svg"
+            alt="Gallery of social media posts"
+            className="hidden xl:block h-screen w-1/2 object-cover bg-no-repeat"
+          />
         </>
       )}
     </>
   )
 }
-
