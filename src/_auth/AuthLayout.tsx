@@ -1,8 +1,24 @@
+import { Outlet, Navigate } from "react-router-dom"
+
 export const AuthLayout = () => {
+  const isAuthenticated = false
+
   return (
-    <div>
-      <h1>AuthLayout</h1>
-    </div>
+    <>
+      {isAuthenticated ? (
+        <Navigate to="/" />
+      ) : (
+        <>
+          <section className="flex flex-1 justify-center items-center flex-col py-10">
+            <Outlet />
+          </section>
+          <img
+            src="/images/auth.svg"
+            alt="Auth illustration"
+            className="absolute bottom-0 right-0 w-2/4" />
+        </>
+      )}
+    </>
   )
 }
 
