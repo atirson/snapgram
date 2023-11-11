@@ -10,7 +10,7 @@ import './globals.css'
 
 export const App = () => {
   return (
-    <main className='flex h-screen'>
+    <main className="flex h-screen">
       <Routes>
         {/* public routes */}
         <Route element={<AuthLayout />}>
