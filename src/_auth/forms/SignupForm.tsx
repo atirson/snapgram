@@ -142,7 +142,7 @@ export const SignupForm = () => {
             className="shad-button_primary"
             type="submit"
           >
-            {isCreatingAccount ? (
+            {isCreatingAccount ?? isUserLoading ?? isSigningIn ? (
               <div className="flex-center gap-2">
                 <Loader />
                 Loading...
