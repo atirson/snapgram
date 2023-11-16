@@ -16,7 +16,7 @@ export async function createUserAccount(user: INewUser) {
       user.name,
     )
 
-    if (!newAccount) throw new Error()
+    if (!newAccount) throw Error
 
     const avatarUrl = avatars.getInitials(user.name)
 
@@ -30,15 +30,15 @@ export async function createUserAccount(user: INewUser) {
 
     return newUser
   } catch (error) {
-    console.error(error)
+    console.log(error)
     return error
   }
 }
 
 export async function saveUserToDB(user: {
   accountId: string
-  name: string
   email: string
+  name: string
   imageUrl: URL
   username?: string
 }) {
@@ -50,11 +50,9 @@ export async function saveUserToDB(user: {
       user,
     )
 
-    if (!newUser) throw new Error()
-
     return newUser
   } catch (error) {
-    console.error(error)
+    console.log(error)
   }
 }
 
@@ -64,15 +62,25 @@ export async function signInAccount(user: { email: string; password: string }) {
 
     return session
   } catch (error) {
-    console.error(error)
+    console.log(error)
+  }
+}
+
+export async function getAccount() {
+  try {
+    const currentAccount = await account.get()
+
+    return currentAccount
+  } catch (error) {
+    console.log(error)
   }
 }
 
 export async function getCurrentUser() {
   try {
-    const currentAccount = await account.get()
+    const currentAccount = await getAccount()
 
-    if (!currentAccount) throw new Error()
+    if (!currentAccount) throw Error
 
     const currentUser = await database.listDocuments(
       appwriteConfig.databaseId,
@@ -80,10 +88,11 @@ export async function getCurrentUser() {
       [Query.equal('accountId', currentAccount.$id)],
     )
 
-    if (!currentUser) throw new Error()
+    if (!currentUser) throw Error
 
     return currentUser.documents[0]
   } catch (error) {
-    console.error(error)
+    console.log(error)
+    return null
   }
 }

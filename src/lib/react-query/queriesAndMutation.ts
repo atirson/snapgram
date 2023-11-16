@@ -1,9 +1,4 @@
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { createUserAccount, signInAccount } from '@/lib/appwrite/api'
 import { INewUser } from '@/types'
@@ -11,6 +6,9 @@ import { INewUser } from '@/types'
 export const useCreateUserAccount = () => {
   return useMutation({
     mutationFn: (user: INewUser) => createUserAccount(user),
+    onError: (error) => {
+      console.error('useCreateUserAccount', error)
+    },
   })
 }
 
