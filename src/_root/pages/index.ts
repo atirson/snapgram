@@ -1,1 +1,10 @@
-export { Home } from './Home';
+export { AllUsers } from './AllUsers'
+export { CreatePost } from './CreatePost'
+export { EditPost } from './EditPost'
+export { Explore } from './Explore'
+export { Home } from './Home'
+export { People } from './People'
+export { PostDetails } from './PostDetails'
+export { Profile } from './Profile'
+export { Saved } from './Saved'
+export { UpdateProfile } from './UpdateProfile'
