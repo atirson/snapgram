@@ -12,17 +12,52 @@ import {
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { SignupValidation } from '@/lib/validation'
+import { PostValidation } from '@/lib/validation'
 import { Textarea } from '@/components/ui/textarea'
 import { FileUploader } from '@/components/shared/FileUploader'
+import { Models } from 'appwrite'
+import { useCreatePost } from '@/lib/react-query/queriesAndMutation'
+import { useUserContext } from '@/context/AuthContext'
+import { useToast } from '@/components/ui/use-toast'
+import { useNavigate } from 'react-router-dom'
+import { Loader } from '@/components/shared/Loader'
 
-export const PostForm = ({ post }) => {
-  const form = useForm<z.infer<typeof SignupValidation>>({
-    resolver: zodResolver(SignupValidation),
+type PostFormProps = {
+  post?: Models.Document
+}
+
+export const PostForm = ({ post }: PostFormProps) => {
+  const { mutateAsync: createPost, isPending: isLoadingCreate } =
+    useCreatePost()
+  const { user } = useUserContext()
+  const { toast } = useToast()
+
+  const navigate = useNavigate()
+
+  const form = useForm<z.infer<typeof PostValidation>>({
+    resolver: zodResolver(PostValidation),
+    defaultValues: {
+      caption: post ? post?.caption : '',
+      file: [],
+      location: post ? post?.location : '',
+      tags: post ? post?.tags : '',
+    },
   })
 
-  async function onSubmit(values: z.infer<typeof SignupValidation>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof PostValidation>) {
+    console.log('Post Submited', values)
+    const newPost = await createPost({
+      ...values,
+      userId: user.id,
+    })
+
+    if (!newPost) {
+      toast({
+        title: 'Please try again',
+      })
+    }
+
+    navigate('/')
   }
 
   return (
@@ -43,7 +78,7 @@ export const PostForm = ({ post }) => {
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="shad-form_message" />
             </FormItem>
           )}
         />
@@ -59,7 +94,7 @@ export const PostForm = ({ post }) => {
                   mediaUrl={post?.imageUrl}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="shad-form_message" />
             </FormItem>
           )}
         />
@@ -72,7 +107,7 @@ export const PostForm = ({ post }) => {
               <FormControl>
                 <Input type="text" className="shad-input" {...field} />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="shad-form_message" />
             </FormItem>
           )}
         />
@@ -92,7 +127,7 @@ export const PostForm = ({ post }) => {
                   {...field}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="shad-form_message" />
             </FormItem>
           )}
         />
@@ -105,10 +140,18 @@ export const PostForm = ({ post }) => {
             Cancel
           </Button>
           <Button
+            disabled={form.formState.isSubmitting}
             className="shad-button_primary whitespace-nowrap"
             type="submit"
           >
-            Submit
+            {isLoadingCreate ? (
+              <div className="flex-center gap-2">
+                <Loader />
+                Submitting...
+              </div>
+            ) : (
+              'Submit'
+            )}
           </Button>
         </div>
       </form>
